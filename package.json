@@ -1,0 +1,35 @@
+{
+  "name": "NEP-M-Entry-Exit-Backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s2ke4/NEP-M-Entry-Exit-Backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s2ke4/NEP-M-Entry-Exit-Backend/issues"
+  },
+  "homepage": "https://github.com/s2ke4/NEP-M-Entry-Exit-Backend#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "google-auth-library": "^7.6.2",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "nodemon": "^2.0.12",
+    "passport-google-oauth": "^2.0.0",
+    "utils": "^0.3.1"
+  }
+}
