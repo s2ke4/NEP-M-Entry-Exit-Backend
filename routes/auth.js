@@ -15,7 +15,7 @@ router.post("/login",async(req,res)=>{
     let result = await db(query);
     if(result.length==0){
         // student found
-        res.json({registered:true,user:result[0]});
+        res.json({registered:false});
     }else{
         req.session.user = result[0];
         req.session.save();
