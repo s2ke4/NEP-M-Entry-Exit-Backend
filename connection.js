@@ -29,6 +29,24 @@ conn.connect((err)=>{
          }
          console.log("ACCESS table created successfully");
      })
+     //creating course table
+     query1 = "CREATE TABLE IF NOT EXISTS course(id INT PRIMARY KEY AUTO_INCREMENT,courseName TEXT,instructor TEXT,credit INT,eligibility TEXT,fee INT,prerequisite TEXT,description TEXT,instructorEmail TEXT,totalSeat INT, registeredStudent INT DEFAULT 0);";
+     conn.query(query1,(error,res)=> {
+         if(error){
+             console.log("Error While Creating course table");
+             throw error;
+         }
+         console.log("COURSE table created successfully");
+     })
+     //creating course-instructor table
+     query1 = "CREATE TABLE IF NOT EXISTS courseInstructor(courseId INT,instructorId INT,FOREIGN KEY(courseId) REFERENCES course(id) ON DELETE CASCADE,FOREIGN KEY(instructorId) REFERENCES access(id) ON DELETE CASCADE, PRIMARY KEY(courseId,instructorId))";
+     conn.query(query1,(error,res)=> {
+         if(error){
+             console.log("Error While Creating courseInstructor table");
+             throw error;
+         }
+         console.log("COURSE-INSTRUCTOR table created successfully");
+     })
 })
 
 module.exports = conn;

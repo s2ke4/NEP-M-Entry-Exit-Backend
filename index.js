@@ -5,6 +5,7 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const authRoute = require("./routes/auth");
+const courseRoute = require("./routes/courseRoute");
 const session = require("express-session");
 const dotenv = require("dotenv")
 dotenv.config();
@@ -39,6 +40,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/auth", authRoute)
+app.use("/course",courseRoute);
 
 
 app.listen(port, () => {
