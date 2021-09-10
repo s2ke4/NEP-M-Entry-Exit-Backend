@@ -4,6 +4,20 @@ const conn = require("../connection");
 const util = require('util');
 const db = util.promisify(conn.query).bind(conn);
 
+
+//get request to fetch all courses in database
+router.get("/get", async (req, res) => {
+    try {
+        const courses = [];
+        let  query = `SELECT * FROM course;`
+        let response = await db(query);
+        res.send(response);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send(error);
+    }
+})
+
 //get request to fetch course data
 router.get("/get/:courseId", async (req, res) => {
     try {
