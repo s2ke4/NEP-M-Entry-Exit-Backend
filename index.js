@@ -7,6 +7,7 @@ const bodyParser = require("body-parser")
 const authRoute = require("./routes/auth");
 const courseRoute = require("./routes/courseRoute");
 const session = require("express-session");
+var MySQLStore = require('express-mysql-session')(session);
 const dotenv = require("dotenv")
 dotenv.config();
 
@@ -31,7 +32,13 @@ app.use(
         cookie:{
             maxAge:10*24*60*60*1000,
             secure:false
-        }
+        },     
+        store: new MySQLStore({
+            host:process.env.DATABASE_HOST,
+            user:process.env.DATABASE_USER,
+            password:process.env.DATABASE_PASSWORD,
+            database:process.env.DATABASE
+        })
     })
 )
 
