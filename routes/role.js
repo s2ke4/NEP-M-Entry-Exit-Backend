@@ -39,7 +39,7 @@ router.delete("/delete/:id", async (req, res) => {
       if (!req.session.user || req.session.user.role !== "admin") {
           return res.status(403).send({ message: "Permission Denied" })
       }
-      const courseId = req.params.id;
+      const id = req.params.id;
       let query = `DELETE FROM access WHERE (id=${id});`
       await db(query);
       console.log("Course Deleted Successfully")
