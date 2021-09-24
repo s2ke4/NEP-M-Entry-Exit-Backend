@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const authRoute = require("./routes/auth");
 const courseRoute = require("./routes/courseRoute");
+const roleRoute = require("./routes/role");
 const session = require("express-session");
 const dotenv = require("dotenv")
 dotenv.config();
@@ -39,8 +40,9 @@ app.get("/", (req, res) => {
     res.send("HELLo")
 })
 
-app.use("/auth", authRoute)
+app.use("/auth", authRoute);
 app.use("/course",courseRoute);
+app.use("/access", roleRoute);
 
 
 app.listen(port, () => {
