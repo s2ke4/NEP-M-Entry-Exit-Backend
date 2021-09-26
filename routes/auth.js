@@ -19,7 +19,6 @@ router.post("/login",async(req,res)=>{
     }else{
         req.session.user = result[0];
         req.session.save();
-        console.log(req.session.user);
         res.json({registered:true,user:result[0]});
     }
 })
