@@ -11,9 +11,11 @@ router.post("/sign-up", async (req, res) => {
       //console.log(req.body)
       const { firstname, lastname, gender, birthday, institute, currentyear, email, phone } = req.body;
       let query;
-      console.log(firstname);
       query = `INSERT INTO studentdata(firstname , lastname , gender , birthday , institute , currentyear , email , phone) VALUES("${firstname}","${lastname}","${gender}","${birthday}","${institute}","${currentyear}","${email}","${phone}");`
       await db(query);
+      const user = {firstname, lastname, gender, birthday, institute, currentyear, email, phone,registered:true,role:"student"}
+      req.session.user = user;
+      req.session.save();
       return res.send({ success: true })
   } catch (error) {
       console.log(error)

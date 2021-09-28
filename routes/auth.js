@@ -15,11 +15,27 @@ router.post("/login",async(req,res)=>{
     let result = await db(query);
     if(result.length==0){
         // student found
-        res.json({registered:false});
+        query = `SELECT * FROM studentData WHERE email="${email}"`;
+        result = await db(query);
+        if(result.length==0){
+            let user = {email,role:"student",registered:false};
+            req.session.user = user;
+            req.session.save();
+            res.json({user});
+        }else{
+            let user = result[0];
+            user.role = "student";
+            user.registered = true;
+            req.session.user = user;
+            req.session.save();
+            res.json({user:user});
+        }
     }else{
-        req.session.user = result[0];
+        let user = result[0];
+        user.registered = true;
+        req.session.user = user;
         req.session.save();
-        res.json({registered:true,user:result[0]});
+        res.json({user:result[0]});
     }
 })
 
