@@ -20,7 +20,7 @@ conn.connect((err)=>{
     //     console.log("Database created successfully")
     // })  
     console.log("Successfully Connected To Database.")
-     // creating user table
+     // creating useraccess table
      let query1 = "CREATE TABLE IF NOT EXISTS access(id INT PRIMARY KEY AUTO_INCREMENT,name TEXT,email TEXT,role TEXT);";
      conn.query(query1,(error,res)=> {
          if(error){
@@ -46,6 +46,15 @@ conn.connect((err)=>{
              throw error;
          }
          console.log("COURSE-INSTRUCTOR table created successfully");
+     })
+
+     query1 = "CREATE TABLE IF NOT EXISTS studentData(id INT PRIMARY KEY AUTO_INCREMENT, firstname TEXT, lastname TEXT, gender TEXT, birthday TEXT, institute TEXT, currentyear TEXT, email TEXT, phone TEXT)";
+     conn.query(query1,(error,res)=> {
+         if(error){
+             console.log("Error While Creating studentdata table");
+             throw error;
+         }
+         console.log("Student datatable studentdata successfully");
      })
 })
 
