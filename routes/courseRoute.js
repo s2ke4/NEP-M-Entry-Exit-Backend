@@ -8,10 +8,17 @@ const db = util.promisify(conn.query).bind(conn);
 //get request to fetch all courses in database
 router.get("/get", async (req, res) => {
     try {
-        const courses = [];
-        let  query = `SELECT * FROM course;`
-        let response = await db(query);
-        res.send(response);
+        if(req.session.user.role !== "instructor") {
+            const courses = [];
+            let  query = `SELECT * FROM course;`
+            let response = await db(query);
+            res.send(response);
+        } else {
+            const courses = [];
+            let query = `SELECT * FROM course WHERE course.instructorEmail = "${req.session.user.email}"`;
+            let response = await db(query);
+            res.send(response);
+        }
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error);
