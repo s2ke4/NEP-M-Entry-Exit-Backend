@@ -47,14 +47,23 @@ conn.connect((err)=>{
          }
          console.log("COURSE-INSTRUCTOR table created successfully");
      })
-
+     //creating studentdata table
      query1 = "CREATE TABLE IF NOT EXISTS studentData(id INT PRIMARY KEY AUTO_INCREMENT, firstname TEXT, lastname TEXT, gender TEXT, birthday TEXT, institute TEXT, currentyear TEXT, email TEXT, phone TEXT)";
      conn.query(query1,(error,res)=> {
          if(error){
              console.log("Error While Creating studentdata table");
              throw error;
          }
-         console.log("Student datatable studentdata successfully");
+         console.log("StudentData Table created successfully");
+     })
+     //creating studentapplications table
+     let studentApplicationsQuery = "CREATE TABLE IF NOT EXISTS studentapplications(studentId INT, courseId INT, FOREIGN KEY(studentId) REFERENCES studentData(id) ON DELETE CASCADE, FOREIGN KEY(courseId) REFERENCES course(id) ON DELETE CASCADE, PRIMARY KEY(studentId, courseId))";
+     conn.query(studentApplicationsQuery,(error, res) => {
+         if(error) {
+             console.log("Error while Creating studentApplications Table");
+             throw error;
+         }
+         console.log("StudentApplications Table created sucessfully");
      })
 })
 

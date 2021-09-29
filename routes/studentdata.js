@@ -5,7 +5,7 @@ const util = require('util');
 const db = util.promisify(conn.query).bind(conn);
 
 
-//post request to add course in database
+//post request to add student data in database
 router.post("/sign-up", async (req, res) => {
   try {
       //console.log(req.body)
@@ -21,6 +21,19 @@ router.post("/sign-up", async (req, res) => {
       console.log(error)
       res.status(500).send(error)
   }
+})
+
+//post request to apply for a course
+router.post("/courses/:id", async (req,res) => {
+    try {
+      const { userId, courseId } = req.body;
+      let query = `INSERT INTO studentApplications(studentId, courseId) VALUES (${userId},${courseId})`;
+      let response = await db(query);
+      return res.send({ success: true })
+    } catch(error) {
+      console.log(error);
+      res.status(500).send(error);
+    }
 })
 
 //get request to fetch course data
