@@ -8,17 +8,31 @@ const db = util.promisify(conn.query).bind(conn);
 //get request to fetch all courses in database
 router.get("/get", async (req, res) => {
     try {
-        if(req.session.user.role !== "instructor") {
+        if(!req.session.user || req.session.user.role !== "instructor") {
             const courses = [];
             let  query = `SELECT * FROM course;`
             let response = await db(query);
             res.send(response);
         } else {
+            // only displaying the courses taught by the instructor on their dashboard
             const courses = [];
             let query = `SELECT * FROM course WHERE course.instructorEmail = "${req.session.user.email}"`;
             let response = await db(query);
             res.send(response);
         }
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send(error);
+    }
+})
+
+//get request to fetch applied courses of the student in database
+router.get("/get/applied-courses", async (req, res) => {
+    try {
+        const courses = [];
+        let query = `select courseName, instructor from course where id = any (select sa.courseId from studentapplications as sa where sa.studentId = ${req.session.user.id})`;
+        let response = await db(query);
+        res.send(response);
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error);
