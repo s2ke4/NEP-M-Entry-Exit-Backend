@@ -8,6 +8,7 @@ const authRoute = require("./routes/auth");
 const courseRoute = require("./routes/courseRoute");
 const roleRoute = require("./routes/role");
 const studentRoute = require("./routes/studentdata");
+const courseEnrollmentRoute = require("./routes/courseEnrollment");
 const session = require("express-session");
 var MySQLStore = require('express-mysql-session')(session);
 const dotenv = require("dotenv")
@@ -52,6 +53,7 @@ app.use("/auth", authRoute);
 app.use("/course",courseRoute);
 app.use("/access", roleRoute);
 app.use("/student", studentRoute);
+app.use("/enrollment",courseEnrollmentRoute)
 
 
 app.listen(port, () => {

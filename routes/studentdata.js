@@ -8,7 +8,6 @@ const db = util.promisify(conn.query).bind(conn);
 //post request to add student data in database
 router.post("/sign-up", async (req, res) => {
   try {
-      //console.log(req.body)
       const { firstname, lastname, gender, birthday, institute, currentyear, email, phone } = req.body;
       let query;
       query = `INSERT INTO studentdata(firstname , lastname , gender , birthday , institute , currentyear , email , phone) VALUES("${firstname}","${lastname}","${gender}","${birthday}","${institute}","${currentyear}","${email}","${phone}");`
@@ -34,6 +33,19 @@ router.post("/courses/:id", async (req,res) => {
       console.log(error);
       res.status(500).send(error);
     }
+})
+
+//route to get a particular student profile
+router.get("/profile/:id",async(req,res)=>{
+  try {
+    const {id} = req.params;
+    let query = `SELECT * FROM studentdata WHERE id=${id}`;
+    let result = await db(query);
+    res.send(result[0]);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error);
+  }
 })
 
 //get request to fetch course data

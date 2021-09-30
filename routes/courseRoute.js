@@ -8,16 +8,24 @@ const db = util.promisify(conn.query).bind(conn);
 //get request to fetch all courses in database
 router.get("/get", async (req, res) => {
     try {
-        if(!req.session.user || req.session.user.role !== "instructor") {
-            const courses = [];
+        if(!req.session.user || req.session.user.role === "student") {
             let  query = `SELECT * FROM course;`
             let response = await db(query);
             res.send(response);
-        } else {
+        } else if(req.session.user.role==="instructor") {
             // only displaying the courses taught by the instructor on their dashboard
-            const courses = [];
             let query = `SELECT * FROM course WHERE course.instructorEmail = "${req.session.user.email}"`;
             let response = await db(query);
+            res.send(response);
+        } else{
+            let  query = `SELECT * FROM course;`
+            let response = await db(query);
+            for(let i=0;i<response.length;i++){
+                let id = response[i].id;
+                query = `SELECT COUNT(*) AS request FROM studentapplications WHERE courseId=${id}`
+                let result = await db(query);
+                response[i].requests = result[0].request;
+            }
             res.send(response);
         }
     } catch (error) {
