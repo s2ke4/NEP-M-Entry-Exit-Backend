@@ -14,7 +14,8 @@ router.get("/get", async (req, res) => {
             res.send(response);
         } else if(req.session.user.role==="instructor") {
             // only displaying the courses taught by the instructor on their dashboard
-            let query = `SELECT * FROM course WHERE course.instructorEmail = "${req.session.user.email}"`;
+            const courses = [];
+            let query = `select * from course where id = any (select courseId from courseinstructor where instructorId = ${req.session.user.id});`;
             let response = await db(query);
             res.send(response);
         } else{
