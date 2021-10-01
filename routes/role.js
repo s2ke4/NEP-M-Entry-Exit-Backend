@@ -34,6 +34,19 @@ router.get("/getroles", async (req, res) => {
   }
 })
 
+//get request to fetch course data
+router.get("/getroles/:id", async (req, res) => {
+    try {
+        const id = req.params.id;
+        let query = `SELECT * FROM access WHERE (access.id=${id});`
+        let response = await db(query);
+        res.send(response);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send(error)
+    }
+})
+
 router.delete("/delete/:id", async (req, res) => {
   try {
       if (!req.session.user || req.session.user.role !== "admin") {
