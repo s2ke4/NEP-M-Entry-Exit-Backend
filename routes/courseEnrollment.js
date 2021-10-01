@@ -42,7 +42,9 @@ router.post("/accept",async(req,res)=>{
         await db(query);
         query = `INSERT INTO notification(courseId,studentId,status,message) VALUES(${courseId},${studentId},"accepted","")`
         await db(query);
-        query = `DELETE FROM studentapplications WHERE courseId=${courseId} AND studentId=${studentId}`
+        query = `DELETE FROM studentapplications WHERE courseId=${courseId} AND studentId=${studentId}`;
+        await db(query);
+        query = `update course set registeredStudent = registeredStudent + 1 where id = ${courseId}`;
         await db(query);
         res.send({success:true});
     } catch (error) {

@@ -48,6 +48,19 @@ router.get("/get/applied-courses", async (req, res) => {
     }
 })
 
+//get request to fetch the courses enrolled in by the student
+router.get("/get/my-courses", async (req,res) => {
+    try {
+        const courses = [];
+        let query = `select * from course where id = any(select courseId from studentcourse where studentId = ${req.session.user.id});`
+        let response = await db(query);
+        res.send(response);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send(error);
+    }
+})
+
 //get request to fetch course data
 router.get("/get/:courseId", async (req, res) => {
     try {
