@@ -60,5 +60,19 @@ router.get("/profile/:id",async(req,res)=>{
 //   }
 // })
 
+// router.get("/notifications",async(req,res)=>{
+//   try {
+//     const StudentId = req.session.user.id;
+//     // console.log(StudentId);
+//     let query = `SELECT * FROM notification WHERE StudentId=${StudentId}`;
+//     let result = await db(query);
+//     res.send(result);
+//   } catch (error) {
+//     console.log(error.message);
+//     res.status(500).send(error);
+//   }
+// })
+
+
 
 module.exports = router;

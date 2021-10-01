@@ -166,7 +166,7 @@ router.put("/edit/:id", async(req, res) => {
             query = `INSERT INTO courseInstructor(courseId,instructorId) VALUES(${courseId},${currentId});`
             await db(query);
         }
-        query =  `UPDATE course SET courseName="${courseName}",instructor="${instructor}",credit=${credit},eligibility="${eligibility}",fee=${fee},prerequisite="${prerequisite}",description="${description}",instructorEmail="${instructorEmail}",totalSeat=${totalSeat};`;
+        query =  `UPDATE course SET courseName="${courseName}",instructor="${instructor}",credit=${credit},eligibility="${eligibility}",fee=${fee},prerequisite="${prerequisite}",description="${description}",instructorEmail="${instructorEmail}",totalSeat=${totalSeat} where courseId =$(courseId);`;
         await db(query);
         console.log("course updated Successfully")
         res.send({message:"Updated Successfully"})

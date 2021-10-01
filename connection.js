@@ -75,7 +75,7 @@ conn.connect((err)=>{
         console.log("STUDENT-COURSE table created successfully");
     })
     //creating notification table
-    query1 = "CREATE TABLE IF NOT EXISTS notification(id INT PRIMARY KEY AUTO_INCREMENT,courseId INT,studentId INT,message TEXT,status TEXT,FOREIGN KEY(courseId) REFERENCES course(id) ON DELETE CASCADE,FOREIGN KEY(studentId) REFERENCES studentData(id) ON DELETE CASCADE)";
+    query1 = "CREATE TABLE IF NOT EXISTS notification(id INT PRIMARY KEY AUTO_INCREMENT, timestamp DATETIME DEFAULT now(), courseId INT,studentId INT,message TEXT,status TEXT,FOREIGN KEY(courseId) REFERENCES course(id) ON DELETE CASCADE,FOREIGN KEY(studentId) REFERENCES studentData(id) ON DELETE CASCADE)";
     conn.query(query1,(error,res)=> {
         if(error){
             console.log("Error While Creating notification table");

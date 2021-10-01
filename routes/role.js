@@ -63,4 +63,24 @@ router.delete("/delete/:id", async (req, res) => {
   }
 })
 
+
+router.put("/edit/:id", async(req, res) => {
+    try {
+        if (!req.session.user || req.session.user.role !== "admin") {
+            return res.status(403).send({ message: "Permission Denied" })
+        }
+        const id = req.params.id;
+        const { name, email, role } = req.body;
+        query =  `UPDATE access SET name="${name}",email="${email}",role="${role}" where id = ${id}`;
+        await db(query);
+        console.log("acess updated Successfully")
+        res.send({message:"Updated Successfully"})
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+})
+
+
+
 module.exports = router;
