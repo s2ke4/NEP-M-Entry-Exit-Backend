@@ -75,16 +75,15 @@ router.get("/get/:courseId", async (req, res) => {
 })
 
 //delete route to delete course from database
-router.delete("/delete/:courseId", async (req, res) => {
+router.put("/toggle/:courseId", async (req, res) => {
     try {
         if (!req.session.user || req.session.user.role !== "admin") {
             return res.status(403).send({ message: "Permission Denied" })
         }
         const courseId = req.params.courseId;
-        let query = `DELETE FROM course WHERE (course.id=${courseId});`
+        let query = `UPDATE course SET isActive=((isActive+1)%2) WHERE (course.id=${courseId});`
         await db(query);
-        console.log("Course Deleted Successfully")
-        res.send({ message: "Course Deleted Successfully." })
+        res.send({ success:true})
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error)
@@ -179,7 +178,7 @@ router.put("/edit/:id", async(req, res) => {
             query = `INSERT INTO courseInstructor(courseId,instructorId) VALUES(${courseId},${currentId});`
             await db(query);
         }
-        query =  `UPDATE course SET courseName="${courseName}",instructor="${instructor}",credit=${credit},eligibility="${eligibility}",fee=${fee},prerequisite="${prerequisite}",description="${description}",instructorEmail="${instructorEmail}",totalSeat=${totalSeat} where courseId =$(courseId);`;
+        query =  `UPDATE course SET courseName="${courseName}",instructor="${instructor}",credit=${credit},eligibility="${eligibility}",fee=${fee},prerequisite="${prerequisite}",description="${description}",instructorEmail="${instructorEmail}",totalSeat=${totalSeat} where id =${courseId};`;
         await db(query);
         console.log("course updated Successfully")
         res.send({message:"Updated Successfully"})

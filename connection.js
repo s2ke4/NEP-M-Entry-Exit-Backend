@@ -30,7 +30,7 @@ conn.connect((err)=>{
          console.log("ACCESS table created successfully");
      })
      //creating course table
-     query1 = "CREATE TABLE IF NOT EXISTS course(id INT PRIMARY KEY AUTO_INCREMENT,courseName TEXT,instructor TEXT,credit INT,eligibility TEXT,fee INT,prerequisite TEXT,description TEXT,instructorEmail TEXT,totalSeat INT, registeredStudent INT DEFAULT 0);";
+     query1 = "CREATE TABLE IF NOT EXISTS course(id INT PRIMARY KEY AUTO_INCREMENT,isActive BOOL DEFAULT true,courseName TEXT,instructor TEXT,credit INT,eligibility TEXT,fee INT,prerequisite TEXT,description TEXT,instructorEmail TEXT,totalSeat INT, registeredStudent INT DEFAULT 0);";
      conn.query(query1,(error,res)=> {
          if(error){
              console.log("Error While Creating course table");
