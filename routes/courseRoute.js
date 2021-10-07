@@ -74,6 +74,32 @@ router.get("/get/:courseId", async (req, res) => {
     }
 })
 
+router.get("/get/enrollments/:courseId", async (req, res) => {
+    try {
+        let final = [];
+        const courseId = req.params.courseId;
+        let query = `SELECT studentId FROM studentcourse WHERE (studentcourse.courseId=${courseId});`
+        let result = await db(query);
+        for(i=0;i<result.length;i++){
+            const studentId = result[i].studentId;
+            let query1 = `SELECT * FROM studentdata WHERE studentdata.id=${studentId};`;
+            let result1 = await db(query1);
+            final.push({
+                id : result1[0].id,
+                name : result1[0].firstname + result1[0].lastname,
+                email : result1[0].email,
+                institute : result1[0].institute,
+                phone : result1[0].phone,
+            })
+        } 
+        res.send(final);
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send(error)
+    }
+})
+
+
 //delete route to delete course from database
 router.put("/toggle/:courseId", async (req, res) => {
     try {

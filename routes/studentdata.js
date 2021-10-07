@@ -26,6 +26,7 @@ router.post("/sign-up", async (req, res) => {
 router.post("/courses/:id", async (req,res) => {
     try {
       const { userId, courseId } = req.body;
+      console.log(userId);
       let query = `INSERT INTO studentApplications(studentId, courseId) VALUES (${userId},${courseId})`;
       let response = await db(query);
       return res.send({ success: true })
@@ -41,6 +42,7 @@ router.get("/profile/:id",async(req,res)=>{
     const {id} = req.params;
     let query = `SELECT * FROM studentdata WHERE id=${id}`;
     let result = await db(query);
+    console.log(result);
     res.send(result[0]);
   } catch (error) {
     console.log(error.message);
@@ -60,19 +62,32 @@ router.get("/profile/:id",async(req,res)=>{
 //   }
 // })
 
-// router.get("/notifications",async(req,res)=>{
-//   try {
-//     const StudentId = req.session.user.id;
-//     // console.log(StudentId);
-//     let query = `SELECT * FROM notification WHERE StudentId=${StudentId}`;
-//     let result = await db(query);
-//     res.send(result);
-//   } catch (error) {
-//     console.log(error.message);
-//     res.status(500).send(error);
-//   }
-// })
-
+router.get("/notifications",async(req,res)=>{
+  try {
+    let final = [];
+    const studentId = req.session.user.id;
+    // console.log(StudentId);
+    let query = `SELECT * FROM notification WHERE studentId=${studentId} ORDER BY timestamp desc;`;
+    let result = await db(query);
+    for(i=0;i<result.length;i++){
+      let courseId = result[i].courseId;
+      let query1 = `SELECT courseName, instructor FROM course WHERE id=${courseId};`;
+      let result1 = await db(query1);
+      console.log(result1[0].couseName);
+      final.push({
+        courseName : result1[0].courseName,
+        instructor : result1[0].instructor,
+        message : result[i].message,
+        status : result[i].status,
+      })
+    } 
+    console.log(final)
+    res.send(final);
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).send(error);
+  }
+})
 
 
 module.exports = router;
