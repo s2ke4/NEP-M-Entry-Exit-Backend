@@ -76,15 +76,19 @@ router.get("/get/:courseId", async (req, res) => {
         const courseId = req.params.courseId;
         let query = `SELECT * FROM course WHERE (course.id=${courseId});`
         let courseDetails = await db(query);
-        let query2 = `select id from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentcourse where studentId = ${req.session.user.id}))`;
-        let remainingCourses = await db(query2);
-        let shouldApply = false;
-        for(let i=0;i<remainingCourses.length;i++) {
-            if(remainingCourses[i].id.toString() === courseId) {
-                shouldApply = true;
+        if(req.session.user && req.session.user.role == "student") {
+            let query2 = `select id from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentcourse where studentId = ${req.session.user.id}))`;
+            let remainingCourses = await db(query2);
+            let shouldApply = false;
+            for(let i=0;i<remainingCourses.length;i++) {
+                if(remainingCourses[i].id.toString() === courseId) {
+                    shouldApply = true;
+                }
             }
+            res.send({courseDetails: courseDetails, shouldApply: shouldApply});
+        } else {
+            res.send(courseDetails);
         }
-        res.send({courseDetails: courseDetails, shouldApply: shouldApply});
         
     } catch (error) {
         console.log(error.message);
