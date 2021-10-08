@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const conn = require("../connection");
 const util = require('util');
+const { resolve } = require("path");
 const db = util.promisify(conn.query).bind(conn);
 
 
@@ -74,8 +75,17 @@ router.get("/get/:courseId", async (req, res) => {
     try {
         const courseId = req.params.courseId;
         let query = `SELECT * FROM course WHERE (course.id=${courseId});`
-        let response = await db(query);
-        res.send(response);
+        let courseDetails = await db(query);
+        let query2 = `select id from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentcourse where studentId = ${req.session.user.id}))`;
+        let remainingCourses = await db(query2);
+        let shouldApply = false;
+        for(let i=0;i<remainingCourses.length;i++) {
+            if(remainingCourses[i].id.toString() === courseId) {
+                shouldApply = true;
+            }
+        }
+        res.send({courseDetails: courseDetails, shouldApply: shouldApply});
+        
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error)
