@@ -8,11 +8,12 @@ const db = util.promisify(conn.query).bind(conn);
 //post request to add student data in database
 router.post("/sign-up", async (req, res) => {
   try {
-      const { firstname, lastname, gender, birthday, institute, currentyear, email, phone } = req.body;
+      const { ABCAccNo, email } = req.body;
+      //console.log(req.body);
       let query;
-      query = `INSERT INTO studentdata(firstname , lastname , gender , birthday , institute , currentyear , email , phone) VALUES("${firstname}","${lastname}","${gender}","${birthday}","${institute}","${currentyear}","${email}","${phone}");`
+      query = `INSERT INTO studentdata(id , email) VALUES("${ABCAccNo}","${email}");`
       let response  = await db(query);
-      const user = {id:response.insertId,firstname, lastname, gender, birthday, institute, currentyear, email, phone,registered:true,role:"student"}
+      const user = {id:ABCAccNo, email,registered:true,role:"student"}
       req.session.user = user;
       req.session.save();
       return res.send({ success: true })
@@ -22,11 +23,38 @@ router.post("/sign-up", async (req, res) => {
   }
 })
 
+router.get("/verify/:id",async(req,res)=>{
+  try {
+      if (!req.session.user || req.session.user.role !== "admin") {
+          return res.status(403).send({ message: "Permission Denied" })
+      }
+      const studentId = req.params.id;
+      let query = `SELECT * FROM ABC_CREDIT WHERE studentId=${studentId}`;
+      const creditinfo = [];
+      result = await db(query);
+      console.log(result);
+      for(let i=0;i<result.length;i++){
+
+          query = `select * from ABC_COURSE where courseId = ${result[i].courseId}`;
+          let course = await db(query);
+          query = `select * from ABC_INSTITUTE where id = ${course[0].instituteId}`;
+          let institute = await db(query);
+          creditinfo.push({courseName: course[0].courseName,courseLink: course[0].coursePageLink,instituteName:institute[0].name,creditEarned:result[i].creditEarned,expiry:result[i].expiryDate,enrollmentDate:result[i].enrollment,completionDate:result[i].completion})
+      }
+
+      res.send(creditinfo);
+      
+  } catch (error) {
+      console.log(error.message);
+      res.status(500).send(error);
+  }
+})
+
 //post request to apply for a course
 router.post("/courses/:id", async (req,res) => {
     try {
       const { userId, courseId } = req.body;
-      console.log(userId);
+      console.log(req.body);
       let query = `INSERT INTO studentApplications(studentId, courseId) VALUES (${userId},${courseId})`;
       let response = await db(query);
       return res.send({ success: true })
@@ -42,7 +70,7 @@ router.get("/profile/:id",async(req,res)=>{
     const {id} = req.params;
     let query = `SELECT * FROM studentdata WHERE id=${id}`;
     let result = await db(query);
-    console.log(result);
+    //console.log(result);
     res.send(result[0]);
   } catch (error) {
     console.log(error.message);

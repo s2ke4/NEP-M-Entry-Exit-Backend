@@ -1,4 +1,5 @@
 const mysql = require("mysql");
+const mysql2 = require("mysql2/promise");
 const dotenv = require("dotenv")
 dotenv.config({path:"./.env"})
 
@@ -8,6 +9,8 @@ const conn = mysql.createConnection({
     password:process.env.DATABASE_PASSWORD,
     database:process.env.DATABASE
 })
+
+
 
 conn.connect((err)=>{
     if(err) throw err;
@@ -48,7 +51,7 @@ conn.connect((err)=>{
          console.log("COURSE-INSTRUCTOR table created successfully");
      })
      //creating studentdata table
-     query1 = "CREATE TABLE IF NOT EXISTS studentData(id INT PRIMARY KEY AUTO_INCREMENT, firstname TEXT, lastname TEXT, gender TEXT, birthday TEXT, institute TEXT, currentyear TEXT, email TEXT, phone TEXT)";
+     query1 = "CREATE TABLE IF NOT EXISTS studentData(id INT PRIMARY KEY, email TEXT)";
      conn.query(query1,(error,res)=> {
          if(error){
              console.log("Error While Creating studentdata table");
@@ -56,6 +59,7 @@ conn.connect((err)=>{
          }
          console.log("StudentData Table created successfully");
      })
+     
      //creating studentapplications table
      let studentApplicationsQuery = "CREATE TABLE IF NOT EXISTS studentapplications(studentId INT, courseId INT, FOREIGN KEY(studentId) REFERENCES studentData(id) ON DELETE CASCADE, FOREIGN KEY(courseId) REFERENCES course(id) ON DELETE CASCADE, PRIMARY KEY(studentId, courseId))";
      conn.query(studentApplicationsQuery,(error, res) => {
@@ -83,6 +87,47 @@ conn.connect((err)=>{
         }
         console.log("notification table created successfully");
     })
+
+    //creating ABC student data
+    // query1 = "CREATE TABLE IF NOT EXISTS abcstudentdata(accnumber INT PRIMARY KEY, name TEXT, gender text,email text, dob text, institute text)";
+    // conn.query(query1,(error,res)=> {
+    //     if(error){
+    //         console.log("Error While Creating studentdata table");
+    //         throw error;
+    //     }
+    //     console.log("ABC StudentData Table created successfully");
+    // })
+
+    // //creating ABC credits data
+    // query1 = "CREATE TABLE IF NOT EXISTS abcstudentcredits(accnumber INT PRIMARY KEY, courseid TEXT, creditsearned int, expirydate text, enrolmenttime text, completiontime text)";
+    // conn.query(query1,(error,res)=> {
+    //     if(error){
+    //         console.log("Error While Creating studentdata table");
+    //         throw error;
+    //     }
+    //     console.log("ABC creditsdata Table created successfully");
+    // })
+
+    // //creating ABC course data
+    // query1 = "CREATE TABLE IF NOT EXISTS abccoursedata(accnumber INT PRIMARY KEY, courseid text, maxcredit int, linkofcourse text)";
+    // conn.query(query1,(error,res)=> {
+    //     if(error){
+    //         console.log("Error While Creating studentdata table");
+    //         throw error;
+    //     }
+    //     console.log("ABC Coursedata Table created successfully");
+    // })
+
+    // //creating ABC student data
+    // query1 = "CREATE TABLE IF NOT EXISTS abcinstitutedata(instituteid INT PRIMARY KEY, name TEXT, location text)";
+    // conn.query(query1,(error,res)=> {
+    //     if(error){
+    //         console.log("Error While Creating studentdata table");
+    //         throw error;
+    //     }
+    //     console.log("ABC institute data Table created successfully");
+    // })
+
 })
 
 module.exports = conn;

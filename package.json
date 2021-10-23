@@ -29,7 +29,8 @@
     "google-auth-library": "^7.6.2",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
-    "nodemon": "^2.0.12",
+    "mysql2": "^2.3.2",
+    "nodemon": "^2.0.14",
     "passport-google-oauth": "^2.0.0",
     "utils": "^0.3.1"
   }

@@ -1,4 +1,4 @@
-        const express = require("express");
+const express = require("express");
 const router = express.Router();
 const conn = require("../connection");
 const util = require('util');
@@ -20,9 +20,9 @@ router.get("/pending-list/:id",async(req,res)=>{
             result = await db(query);
             let students = [];
             for(let i=0;i<result.length;i++){
-                query = `SELECT id,firstname,lastname,institute FROM studentdata WHERE id=${result[i].studentId}`;
+                query = `SELECT id FROM studentdata WHERE id=${result[i].studentId}`;
                 let response = await db(query);
-                students.push({id:response[0].id,name:response[0].firstname+" "+response[0].lastname,institute:response[0].institute});
+                students.push({id:response[0].id});
             }
             res.send({courseName,students})
         }
@@ -31,6 +31,11 @@ router.get("/pending-list/:id",async(req,res)=>{
         res.status(500).send(error);
     }
 })
+
+
+
+
+
 
 router.post("/accept",async(req,res)=>{
     try {
