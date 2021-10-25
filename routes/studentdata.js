@@ -68,7 +68,7 @@ router.post("/courses/:id", async (req,res) => {
 router.get("/profile/:id",async(req,res)=>{
   try {
     const {id} = req.params;
-    let query = `SELECT * FROM studentdata WHERE id=${id}`;
+    let query = `SELECT * FROM abcstudentdata WHERE accnumber=${id}`;
     let result = await db(query);
     //console.log(result);
     res.send(result[0]);
