@@ -71,7 +71,7 @@ router.post("/courses/:id", async (req,res) => {
 router.get("/profile/:id",async(req,res)=>{
   try {
     const {id} = req.params;
-    let query = `SELECT * FROM abcstudentdata WHERE accnumber=${id}`;
+    let query = `SELECT accnumber, name, gender, email, dob, (SELECT name as institutename from abc_institute WHERE id IN (SELECT institute FROM abcstudentdata WHERE accnumber = ${id})) AS institutename FROM abcstudentdata WHERE accnumber = ${id};`;
     let result = await db(query);
     //console.log(result);
     res.send(result[0]);
