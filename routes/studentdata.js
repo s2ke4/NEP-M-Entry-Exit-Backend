@@ -9,10 +9,14 @@ const db = util.promisify(conn.query).bind(conn);
 router.post("/sign-up", async (req, res) => {
   try {
       const { ABCAccNo, email } = req.body;
-      //console.log(req.body);
       let query;
-      query = `INSERT INTO studentdata(id , email) VALUES("${ABCAccNo}","${email}");`
-      let response  = await db(query);
+      query = `SELECT * FROM abcstudentdata WHERE accnumber=${ABCAccNo} AND email="${email}"`;
+      let response = await db(query);
+      if(response.length==0){
+        return res.send({success: false, msg: "Invalid Acc. Number or Email Address"})
+      }
+      query = `INSERT INTO studentData(id , email) VALUES("${ABCAccNo}","${email}");`
+      response  = await db(query);
       const user = {id:ABCAccNo, email,registered:true,role:"student"}
       req.session.user = user;
       req.session.save();
@@ -32,7 +36,6 @@ router.get("/verify/:id",async(req,res)=>{
       let query = `SELECT * FROM ABC_CREDIT WHERE studentId=${studentId}`;
       const creditinfo = [];
       result = await db(query);
-      console.log(result);
       for(let i=0;i<result.length;i++){
 
           query = `select * from ABC_COURSE where courseId = ${result[i].courseId}`;

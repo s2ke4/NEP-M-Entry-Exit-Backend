@@ -43,7 +43,7 @@ router.post("/accept",async(req,res)=>{
             return res.status(403).send({ message: "Permission Denied" })
         }
         const {courseId,studentId} = req.body;
-        let query = `INSERT INTO studentcourse(courseId,studentId) VALUES(${courseId},${studentId})`;
+        let query = `INSERT INTO studentCourse(courseId,studentId) VALUES(${courseId},${studentId})`;
         await db(query);
         query = `INSERT INTO notification(courseId,studentId,status,message) VALUES(${courseId},${studentId},"accepted","")`
         await db(query);

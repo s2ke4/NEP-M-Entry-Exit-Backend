@@ -14,11 +14,11 @@ router.get("/get", async (req, res) => {
             let response = await db(query);
             res.send(response);
         }else if(req.session.user.role === "student") {
-            let query1 = `select * from course where id = any (select courseId from studentcourse where studentId = ${req.session.user.id})`;
+            let query1 = `select * from course where id = any (select courseId from studentCourse where studentId = ${req.session.user.id})`;
             let enrolledCourses = await db(query1);
             let query2 = `select * from course where id = any (select courseId from studentapplications where studentId = ${req.session.user.id})`;
             let appliedCourses =  await db(query2);
-            let query3 = `select * from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentcourse where studentId = ${req.session.user.id}))`;
+            let query3 = `select * from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentCourse where studentId = ${req.session.user.id}))`;
             let remainingCourses = await db(query3);
             res.send({enrolledCourses: enrolledCourses, appliedCourses: appliedCourses, remainingCourses: remainingCourses});
         } else if(req.session.user.role==="instructor") {
@@ -61,7 +61,7 @@ router.get("/get/applied-courses", async (req, res) => {
 router.get("/get/my-courses", async (req,res) => {
     try {
         const courses = [];
-        let query = `select * from course where id = any(select courseId from studentcourse where studentId = ${req.session.user.id});`
+        let query = `select * from course where id = any(select courseId from studentCourse where studentId = ${req.session.user.id});`
         let response = await db(query);
         res.send(response);
     } catch (error) {
@@ -77,7 +77,7 @@ router.get("/get/:courseId", async (req, res) => {
         let query = `SELECT * FROM course WHERE (course.id=${courseId});`
         let courseDetails = await db(query);
         if(req.session.user && req.session.user.role == "student") {
-            let query2 = `select id from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentcourse where studentId = ${req.session.user.id}))`;
+            let query2 = `select id from course where id not in ((select courseId from studentapplications where studentId = ${req.session.user.id}) union (select courseId from studentCourse where studentId = ${req.session.user.id}))`;
             let remainingCourses = await db(query2);
             let shouldApply = false;
             for(let i=0;i<remainingCourses.length;i++) {
@@ -100,7 +100,7 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
     try {
         let final = [];
         const courseId = req.params.courseId;
-        let query = `SELECT studentId FROM studentcourse WHERE (studentcourse.courseId=${courseId});`
+        let query = `SELECT studentId FROM studentCourse WHERE (studentCourse.courseId=${courseId});`
         let result = await db(query);
         for(i=0;i<result.length;i++){
             const studentId = result[i].studentId;
