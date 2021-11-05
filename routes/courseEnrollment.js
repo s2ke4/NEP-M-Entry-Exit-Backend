@@ -33,10 +33,6 @@ router.get("/pending-list/:id",async(req,res)=>{
 })
 
 
-
-
-
-
 router.post("/accept",async(req,res)=>{
     try {
         if (!req.session.user || req.session.user.role !== "admin") {

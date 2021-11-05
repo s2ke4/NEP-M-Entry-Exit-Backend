@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const conn = require("../connection");
 const util = require('util');
-const { resolve } = require("path");
 const db = util.promisify(conn.query).bind(conn);
 
 
@@ -100,9 +99,9 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
     try {
         let final = [];
         const courseId = req.params.courseId;
-        let query = `SELECT studentId FROM studentCourse WHERE (studentCourse.courseId=${courseId});`
+        let query = `SELECT * FROM studentCourse WHERE (studentCourse.courseId=${courseId});`
         let result = await db(query);
-        for(i=0;i<result.length;i++){
+        for(let i=0;i<result.length;i++){
             const studentId = result[i].studentId;
             let query1 = `SELECT * FROM abcstudentdata WHERE abcstudentdata.accnumber=${studentId};`;
             let result1 = await db(query1);
@@ -113,7 +112,10 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
                 name : result1[0].name,
                 email : result1[0].email,
                 institute : instituteName[0].name,
-                // phone : result1[0].phone,
+                grade: result[i].credit,
+                enrollment: result[i].enrollment,
+                completion: result[i].completion,
+                expiry: result[i].expiry
             })
         } 
         res.send(final);
@@ -183,10 +185,27 @@ router.post("/add", async (req, res) => {
             query = `INSERT INTO courseInstructor(courseId,instructorId) VALUES(${courseId},${currentId});`
             await db(query);
         }
-        return res.send({ success: true })
+        return res.send({ courseId, success: true })
     } catch (error) {
         console.log(error)
         res.status(500).send(error)
+    }
+})
+
+//put request to insert abc course id
+router.put("/add-abc-course-id/:id",async(req,res)=>{
+    try {
+        if (!req.session.user || req.session.user.role !== "admin") {
+            return res.status(403).send({ message: "Permission Denied" })
+        }
+        const courseId = req.params.id;
+        const abcCourseId = req.body.courseId;
+        let query = `UPDATE course SET abcCourseId=${abcCourseId} WHERE id =${courseId};`;
+        await db(query);
+        return res.send({success: true})
+    } catch (error) {
+        console.log("error while adding abc course id in our db",error.message);
+        return res.status(500).send(error);
     }
 })
 

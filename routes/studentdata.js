@@ -125,4 +125,18 @@ router.get("/notifications",async(req,res)=>{
 })
 
 
+//route to submit grade
+router.put("/grade/:courseId/:studentId",async(req,res)=>{
+  const {grade,completion,expiry} = req.body;
+  const {courseId,studentId} = req.params;
+  try {
+    let query = `UPDATE studentcourse SET credit=${grade}, completion="${completion}", expiry="${expiry}" WHERE courseId=${courseId} AND studentId=${studentId}`;
+    await db(query);
+    res.send({success:true})
+  } catch (error) {
+      console.log(error.message);
+      return res.send({success:false})
+  }
+})
+
 module.exports = router;

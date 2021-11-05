@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser")
 const bodyParser = require("body-parser")
 const authRoute = require("./routes/auth");
 const courseRoute = require("./routes/courseRoute");
+const abcRoute = require("./routes/abcRoute");
 const roleRoute = require("./routes/role");
 const studentRoute = require("./routes/studentdata");
 const courseEnrollmentRoute = require("./routes/courseEnrollment");
@@ -51,6 +52,7 @@ app.get("/", (req, res) => {
 
 app.use("/auth", authRoute);
 app.use("/course",courseRoute);
+app.use("/abc",abcRoute);
 app.use("/access", roleRoute);
 app.use("/student", studentRoute);
 app.use("/enrollment",courseEnrollmentRoute)
