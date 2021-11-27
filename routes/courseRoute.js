@@ -6,6 +6,19 @@ const db = util.promisify(conn.query).bind(conn);
 
 
 //get request to fetch all courses in database
+
+router.get("/getAbcId/:courseId",async(req,res)=>{
+    try {
+        const {courseId} = req.params;
+        let query = `SELECT abcCourseId from course WHERE id=${courseId}`;
+        const result = await db(query);
+        res.send(result[0]);
+    } catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
+
 router.get("/get", async (req, res) => {
     try {
         if(!req.session.user) {
