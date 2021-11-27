@@ -101,6 +101,8 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
         const courseId = req.params.courseId;
         let query = `SELECT * FROM studentCourse WHERE (studentCourse.courseId=${courseId});`
         let result = await db(query);
+        let courseNameQuery = `SELECT courseName, isActive, abcCourseId FROM course WHERE (course.id=${courseId});`
+        let course = await db(courseNameQuery);
         for(let i=0;i<result.length;i++){
             const studentId = result[i].studentId;
             let query1 = `SELECT * FROM abcstudentdata WHERE abcstudentdata.accnumber=${studentId};`;
@@ -115,10 +117,10 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
                 grade: result[i].credit,
                 enrollment: result[i].enrollment,
                 completion: result[i].completion,
-                expiry: result[i].expiry
+                expiry: result[i].expiry,
             })
         } 
-        res.send(final);
+        res.send({enrollment: final, course: course});
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error)
