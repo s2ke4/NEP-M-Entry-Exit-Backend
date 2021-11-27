@@ -39,6 +39,35 @@ router.put("/edit-course/:courseId",async(req,res)=>{
 })
 
 
+// @post /abc/enrollment
+//enroll studentin abc
+router.post("/enrollment",async(req,res)=>{
+    try {
+        const {courseId,studentId} = req.body;
+        let query = `INSERT INTO abc_credit(studentId,courseId,enrollment) VALUES (${studentId},${courseId},curdate())`
+        await db(query);
+        return res.send({success:true})
+    } catch (error) {
+        console.log("error while adding student abc credit table");
+        console.log(error);
+        res.status(500).send(error)
+    }
+})
 
+// @put /abc/grade/:courseId/:studentId
+// update grade
+
+router.put("/grade/:courseId/:studentId",async(req,res)=>{
+    const {grade,completion,expiry} = req.body;
+    const {courseId,studentId} = req.params;
+    try {
+      let query = `UPDATE abc_credit SET creditEarned=${grade}, completion="${completion}", expiryDate="${expiry}" WHERE courseId=${courseId} AND studentId=${studentId}`;
+      await db(query);
+      res.send({success:true})
+    } catch (error) {
+        console.log(error.message);
+        return res.send({success:false})
+    }
+  })
 
 module.exports = router;
