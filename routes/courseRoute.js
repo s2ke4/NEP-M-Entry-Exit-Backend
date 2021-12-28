@@ -120,7 +120,7 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
             const studentId = result[i].studentId;
             let query1 = `SELECT * FROM abc_student_data WHERE abc_student_data.accnumber=${studentId};`;
             let result1 = await db(query1);
-            query1 = `select name from abc_institute where abc_institute.id = ${result1[0].institute};`;
+            query1 = `select name from abc_institute where abc_institute.id = ${result1[0].instituteId};`;
             let instituteName = await db(query1);
             final.push({
                 id : result1[0].accnumber,

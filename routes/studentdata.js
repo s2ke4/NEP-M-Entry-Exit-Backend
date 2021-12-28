@@ -74,7 +74,7 @@ router.get("/profile/:id",async(req,res)=>{
     let data = [];
     let query = `SELECT * FROM abc_student_data WHERE accnumber=${id}`;
     let result = await db(query);
-    query = `select name from abc_institute where id = ${result[0].institute}`;
+    query = `select name from abc_institute where id = ${result[0].instituteId}`;
     let instituteName = await db(query); 
     data.push({name : result[0].name, email : result[0].email, id : result[0].accnumber, dob : result[0].dob, institute : instituteName[0].name, gender : result[0].gender});
     console.log(data);
