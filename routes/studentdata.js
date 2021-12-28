@@ -10,7 +10,7 @@ router.post("/sign-up", async (req, res) => {
   try {
       const { ABCAccNo, email } = req.body;
       let query;
-      query = `SELECT * FROM abcstudentdata WHERE accnumber=${ABCAccNo} AND email="${email}"`;
+      query = `SELECT * FROM abc_student_data WHERE accnumber=${ABCAccNo} AND email="${email}"`;
       let response = await db(query);
       if(response.length==0){
         return res.send({success: false, msg: "Invalid Acc. Number or Email Address"})
@@ -72,7 +72,7 @@ router.get("/profile/:id",async(req,res)=>{
   try {
     const {id} = req.params;
     let data = [];
-    let query = `SELECT * FROM abcstudentdata WHERE accnumber=${id}`;
+    let query = `SELECT * FROM abc_student_data WHERE accnumber=${id}`;
     let result = await db(query);
     query = `select name from abc_institute where id = ${result[0].institute}`;
     let instituteName = await db(query); 
