@@ -44,7 +44,7 @@ router.put("/edit-course/:courseId",async(req,res)=>{
 router.post("/enrollment",async(req,res)=>{
     try {
         const {courseId,studentId} = req.body;
-        let query = `INSERT INTO abc_credit(studentId,courseId,enrollment) VALUES (${studentId},${courseId},curdate())`
+        let query = `INSERT INTO abc_credit(studentId,courseId,enrollmentDate) VALUES (${studentId},${courseId},curdate())`
         await db(query);
         return res.send({success:true})
     } catch (error) {
@@ -61,7 +61,7 @@ router.put("/grade/:courseId/:studentId",async(req,res)=>{
     const {grade,completion,expiry} = req.body;
     const {courseId,studentId} = req.params;
     try {
-      let query = `UPDATE abc_credit SET creditEarned=${grade}, completion="${completion}", expiryDate="${expiry}" WHERE courseId=${courseId} AND studentId=${studentId}`;
+      let query = `UPDATE abc_credit SET creditEarned=${grade}, completionDate="${completion}", expiryDate="${expiry}" WHERE courseId=${courseId} AND studentId=${studentId}`;
       await db(query);
       res.send({success:true})
     } catch (error) {
