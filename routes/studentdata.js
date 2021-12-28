@@ -36,10 +36,12 @@ router.get("/verify/:id",async(req,res)=>{
       let query = `SELECT * FROM ABC_CREDIT WHERE studentId=${studentId}`;
       const creditinfo = [];
       result = await db(query);
+      // console.log(result);
       for(let i=0;i<result.length;i++){
 
           query = `select * from ABC_COURSE where courseId = ${result[i].courseId}`;
           let course = await db(query);
+          // console.log(course,result[i])
           query = `select * from ABC_INSTITUTE where id = ${course[0].instituteId}`;
           let institute = await db(query);
           creditinfo.push({courseName: course[0].courseName,courseLink: course[0].coursePageLink,instituteName:institute[0].name,creditEarned:result[i].creditEarned,expiry:result[i].expiryDate,enrollmentDate:result[i].enrollment,completionDate:result[i].completion})
