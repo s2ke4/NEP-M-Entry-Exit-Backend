@@ -116,6 +116,14 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
         let result = await db(query);
         let courseNameQuery = `SELECT courseName, isActive, abcCourseId FROM course WHERE (course.id=${courseId});`
         let course = await db(courseNameQuery);
+        let isTeaching = false;
+        if(req.session.user.role==="instructor"){
+            query = `SELECT * FROM courseInstructor WHERE (courseId=${courseId} AND instructorId = ${req.session.user.id})`;
+            let data = await db(query);
+            if(data.length>0){
+                isTeaching = true;
+            }
+        }
         for(let i=0;i<result.length;i++){
             const studentId = result[i].studentId;
             let query1 = `SELECT * FROM abc_student_data WHERE abc_student_data.accnumber=${studentId};`;
@@ -133,7 +141,7 @@ router.get("/get/enrollments/:courseId", async (req, res) => {
                 expiry: result[i].expiry,
             })
         } 
-        res.send({enrollment: final, course: course});
+        res.send({enrollment: final, course: course,isTeaching});
     } catch (error) {
         console.log(error.message);
         res.status(500).send(error)
