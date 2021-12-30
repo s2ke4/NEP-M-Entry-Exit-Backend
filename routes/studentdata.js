@@ -41,7 +41,15 @@ router.get("/verify/:id",async(req,res)=>{
           let course = await db(query);
           query = `select * from ABC_INSTITUTE where id = ${course[0].instituteId}`;
           let institute = await db(query);
-          creditinfo.push({courseName: course[0].courseName,courseLink: course[0].coursePageLink,instituteName:institute[0].name,creditEarned:result[i].creditEarned,expiry:result[i].expiryDate,enrollmentDate:result[i].enrollmentDate,completionDate:result[i].completionDate})
+          creditinfo.push({
+            courseName: course[0].courseName,
+            courseLink: course[0].coursePageLink,
+            instituteName:institute[0].name,
+            creditEarned:result[i].creditEarned,
+            expiry:(result[i].expiryDate && result[i].expiryDate.toLocaleString().substr(0,10)),
+            enrollmentDate:(result[i].enrollmentDate && result[i].enrollmentDate.toLocaleString().substr(0,10)),
+            completionDate:(result[i].completionDate && result[i].completionDate.toLocaleString().substr(0,10))
+          })
       }
 
       res.send(creditinfo);
@@ -75,7 +83,7 @@ router.get("/profile/:id",async(req,res)=>{
     let result = await db(query);
     query = `select name from abc_institute where id = ${result[0].instituteId}`;
     let instituteName = await db(query); 
-    data.push({name : result[0].name, email : result[0].email, id : result[0].accnumber, dob : result[0].dob, institute : instituteName[0].name, gender : result[0].gender});
+    data.push({name : result[0].name, email : result[0].email, id : result[0].accnumber, dob : result[0].dob.toLocaleString().substr(0,10), institute : instituteName[0].name, gender : result[0].gender});
     console.log(data);
     res.send(data);
   } catch (error) {
